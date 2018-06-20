@@ -34,6 +34,7 @@ const (
 	timeoutURL          = "http://localhost:8080/timeout"
 	basicAuthURL        = "http://localhost:8080/basic-auth"
 	robotsTxtURL        = "http://localhost:8080/robots.txt"
+	whitespaceURL       = "http://localhost:8080/\tf\no\ro"
 	missingMetadataURL  = "http://localhost:8081"
 	invalidRobotsTxtURL = "http://localhost:8082"
 	invalidMIMETypeURL  = "http://localhost:8083"

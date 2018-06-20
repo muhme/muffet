@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"mime"
-	"net/url"
 	"strings"
 	"sync"
 

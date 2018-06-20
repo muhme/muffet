@@ -46,6 +46,20 @@ func TestFetcherFetchCache(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
+func TestFetcherFetchWithEscapedWS(t *testing.T) {
+	f := newFetcher(fetcherOptions{})
+
+	r, err := f.Fetch(escapedWSExistentURL)
+	_, ok := r.Page()
+
+	assert.Equal(t, 200, r.StatusCode())
+	assert.True(t, ok)
+	assert.Nil(t, err)
+
+	_, err = f.Fetch(escapedWSNonexistentURL)
+	assert.NotNil(t, err)
+}
+
 func TestFetcherFetchWithFragments(t *testing.T) {
 	f := newFetcher(fetcherOptions{})
 

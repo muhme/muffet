@@ -28,10 +28,17 @@ var atomToAttributes = map[atom.Atom][]string{
 
 type scraper struct {
 	excludedPatterns []*regexp.Regexp
+	whitespaceRegexp *regexp.Regexp
 }
 
-func newScraper(rs []*regexp.Regexp) scraper {
-	return scraper{rs}
+func newScraper(rs []*regexp.Regexp, b bool) scraper {
+	r := (*regexp.Regexp)(nil)
+
+	if b {
+		r = compileRegexp("(\t|\n|\r)")
+	}
+
+	return scraper{rs, r}
 }
 
 func (sc scraper) Scrape(n *html.Node, base *url.URL) map[string]error {
@@ -59,7 +66,13 @@ func (sc scraper) Scrape(n *html.Node, base *url.URL) map[string]error {
 				continue
 			}
 
-			us[base.ResolveReference(u).String()] = nil
+			s = base.ResolveReference(u).String()
+
+			if sc.whitespaceRegexp != nil {
+				s = sc.whitespaceRegexp.ReplaceAllString(s, "")
+			}
+
+			us[s] = nil
 		}
 	}
 
@@ -74,4 +87,14 @@ func (sc scraper) isURLExcluded(u string) bool {
 	}
 
 	return false
+}
+
+func compileRegexp(s string) *regexp.Regexp {
+	r, err := regexp.Compile(s)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return r
 }
